@@ -1,13 +1,21 @@
+import { useState } from "react";
 import { View, Text, Pressable, StyleSheet } from "react-native";
 
 import { Input } from "./Input";
 
-export const Password = ({ placeholder = "", onFocus }) => {
+export const Password = ({ placeholder = "" }) => {
+  const [isPasswordVisible, setIsPasswordVisible] = useState(false);
+
   return (
     <View style={styles.passwordContainer}>
-      <Input placeholder={placeholder} />
-      <Pressable style={styles.show}>
-        <Text style={styles.showText}>Показати</Text>
+      <Input placeholder={placeholder} secured={!isPasswordVisible} />
+      <Pressable
+        style={styles.show}
+        onPress={() => setIsPasswordVisible(!isPasswordVisible)}
+      >
+        <Text style={styles.showText}>
+          {isPasswordVisible ? "Сховати" : "Показати"}
+        </Text>
       </Pressable>
     </View>
   );

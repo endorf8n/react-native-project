@@ -4,7 +4,9 @@ export const Redirection = ({ firstPart = "", secondPart = "" }) => {
   return (
     <View style={styles.container}>
       <Text style={styles.text}>{firstPart}</Text>
-      <Text style={styles.text}>{secondPart}</Text>
+      <Text style={{ ...styles.text, textDecorationLine: "underline" }}>
+        {secondPart}
+      </Text>
     </View>
   );
 };
