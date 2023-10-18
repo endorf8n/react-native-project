@@ -1,33 +1,29 @@
 import { useState } from "react";
 import {
+  KeyboardAvoidingView,
   StyleSheet,
   Text,
   View,
-  KeyboardAvoidingView,
   Platform,
   TouchableWithoutFeedback,
 } from "react-native";
-import { PlusIcon } from "../components/icons/PlusIcon.jsx";
-import { Input } from "../components/Input.jsx";
-import { Password } from "../components/Password.jsx";
-import { ConfirmButton } from "../components/ConfirmButton.jsx";
-import { Redirection } from "../components/Redirection.jsx";
-import { Background } from "../components/Background.jsx";
-import useKeyboardOpen from "../hooks/useKeyboardOpen.js";
-import { handleCloseKeyboard } from "../services/handleCloseKeyboard.js";
+import { Input } from "../../components/Input";
+import { Password } from "../../components/Password";
+import { ConfirmButton } from "../../components/ConfirmButton";
+import { Redirection } from "../../components/Redirection";
+import { Background } from "../../components/Background";
+import useKeyboardOpen from "../../hooks/useKeyboardOpen";
+import { handleCloseKeyboard } from "../../services/handleCloseKeyboard";
 
-const RegistrationScreen = () => {
-  const [login, setLogin] = useState("");
+const LoginScreen = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
   const [isKeyboardOpen, setIsKeyboardOpen] = useKeyboardOpen();
 
   const handleSubmit = () => {
-    const data = { login, email, password };
+    const data = { email, password };
     console.log(data);
-
-    setLogin("");
     setEmail("");
     setPassword("");
   };
@@ -36,24 +32,16 @@ const RegistrationScreen = () => {
     <Background>
       <TouchableWithoutFeedback onPress={handleCloseKeyboard}>
         <View style={styles.container}>
-          <View style={styles.imageContainer}>
-            <PlusIcon />
-          </View>
-          <Text style={styles.title}>Реєстрація</Text>
+          <Text style={styles.title}>Увійти</Text>
           <KeyboardAvoidingView
             behavior={Platform.OS === "ios" ? "padding" : "height"}
           >
             <View
               style={{
                 ...styles.inputContainer,
-                marginBottom: isKeyboardOpen ? 120 : 43,
+                marginBottom: isKeyboardOpen ? 100 : 43,
               }}
             >
-              <Input
-                placeholder="Логін"
-                value={login}
-                onChangeText={setLogin}
-              />
               <Input
                 placeholder="Адреса електронної пошти"
                 value={email}
@@ -66,8 +54,11 @@ const RegistrationScreen = () => {
               />
             </View>
           </KeyboardAvoidingView>
-          <ConfirmButton title="Зареєструватися" onPress={handleSubmit} />
-          <Redirection firstPart="Вже є акаунт?" secondPart="Увійти" />
+          <ConfirmButton title="Увійти" onPress={handleSubmit} />
+          <Redirection
+            firstPart="Немає акаунту?"
+            secondPart="Зареєструватися"
+          />
         </View>
       </TouchableWithoutFeedback>
     </Background>
@@ -78,22 +69,11 @@ const styles = StyleSheet.create({
   container: {
     position: "relative",
     paddingHorizontal: 16,
-    paddingTop: 92,
-    paddingBottom: 74,
+    paddingTop: 32,
+    paddingBottom: 110,
     backgroundColor: "#ffffff",
     borderTopRightRadius: 25,
     borderTopLeftRadius: 25,
-  },
-
-  imageContainer: {
-    position: "absolute",
-    top: -60,
-    left: "50%",
-    transform: [{ translateX: -50 }],
-    width: 120,
-    height: 120,
-    borderRadius: 16,
-    backgroundColor: "#f6f6f6",
   },
 
   title: {
@@ -104,10 +84,9 @@ const styles = StyleSheet.create({
     textAlign: "center",
     color: "#212121",
   },
-
   inputContainer: {
     rowGap: 16,
   },
 });
 
-export default RegistrationScreen;
+export default LoginScreen;
