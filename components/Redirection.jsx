@@ -1,10 +1,20 @@
 import { StyleSheet, Text, View } from "react-native";
+import { useNavigation } from "@react-navigation/native";
 
-export const Redirection = ({ firstPart = "", secondPart = "" }) => {
+export const Redirection = ({
+  firstPart = "",
+  secondPart = "",
+  navigateTo = "Registration",
+}) => {
+  const navigation = useNavigation();
+
   return (
     <View style={styles.container}>
       <Text style={styles.text}>{firstPart}</Text>
-      <Text style={{ ...styles.text, textDecorationLine: "underline" }}>
+      <Text
+        style={{ ...styles.text, textDecorationLine: "underline" }}
+        onPress={() => navigation.navigate(navigateTo)}
+      >
         {secondPart}
       </Text>
     </View>

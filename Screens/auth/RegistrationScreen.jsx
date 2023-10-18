@@ -67,7 +67,11 @@ const RegistrationScreen = () => {
             </View>
           </KeyboardAvoidingView>
           <ConfirmButton title="Зареєструватися" onPress={handleSubmit} />
-          <Redirection firstPart="Вже є акаунт?" secondPart="Увійти" />
+          <Redirection
+            firstPart="Вже є акаунт?"
+            secondPart="Увійти"
+            navigateTo="Login"
+          />
         </View>
       </TouchableWithoutFeedback>
     </Background>

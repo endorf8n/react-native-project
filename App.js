@@ -1,8 +1,7 @@
-import { StatusBar } from "expo-status-bar";
-import { StyleSheet, View } from "react-native";
-import RegistrationScreen from "./Screens/RegistrationScreen";
-import LoginScreen from "./Screens/LoginScreen";
+import "react-native-gesture-handler";
 import { useFonts } from "expo-font";
+import { NavigationContainer } from "@react-navigation/native";
+import { selectRoute } from "./services/router";
 
 export default function App() {
   const [fontsLoaded, error] = useFonts({
@@ -15,17 +14,5 @@ export default function App() {
     return null;
   }
 
-  return (
-    <View style={styles.container}>
-      <RegistrationScreen />
-      {/* <LoginScreen /> */}
-      <StatusBar style="auto" />
-    </View>
-  );
+  return <NavigationContainer>{selectRoute(null)}</NavigationContainer>;
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-});

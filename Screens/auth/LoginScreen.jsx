@@ -58,6 +58,7 @@ const LoginScreen = () => {
           <Redirection
             firstPart="Немає акаунту?"
             secondPart="Зареєструватися"
+            navigateTo="Registration"
           />
         </View>
       </TouchableWithoutFeedback>
