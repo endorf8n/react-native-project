@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 
 export const Redirection = ({
@@ -11,12 +11,14 @@ export const Redirection = ({
   return (
     <View style={styles.container}>
       <Text style={styles.text}>{firstPart}</Text>
-      <Text
-        style={{ ...styles.text, textDecorationLine: "underline" }}
+      <TouchableOpacity
         onPress={() => navigation.navigate(navigateTo)}
+        activeOpacity={0.5}
       >
-        {secondPart}
-      </Text>
+        <Text style={{ ...styles.text, textDecorationLine: "underline" }}>
+          {secondPart}
+        </Text>
+      </TouchableOpacity>
     </View>
   );
 };
