@@ -1,3 +1,4 @@
+import { useState } from "react";
 import {
   StyleSheet,
   Text,
@@ -16,7 +17,20 @@ import useKeyboardOpen from "../hooks/useKeyboardOpen.js";
 import { handleCloseKeyboard } from "../services/handleCloseKeyboard.js";
 
 const RegistrationScreen = () => {
+  const [login, setLogin] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
   const [isKeyboardOpen, setIsKeyboardOpen] = useKeyboardOpen();
+
+  const handleSubmit = () => {
+    const data = { login, email, password };
+    console.log(data);
+
+    setLogin("");
+    setEmail("");
+    setPassword("");
+  };
 
   return (
     <Background>
@@ -35,12 +49,24 @@ const RegistrationScreen = () => {
                 marginBottom: isKeyboardOpen ? 120 : 43,
               }}
             >
-              <Input placeholder="Логін" />
-              <Input placeholder="Адреса електронної пошти" />
-              <Password placeholder="Пароль" />
+              <Input
+                placeholder="Логін"
+                value={login}
+                onChangeText={setLogin}
+              />
+              <Input
+                placeholder="Адреса електронної пошти"
+                value={email}
+                onChangeText={setEmail}
+              />
+              <Password
+                placeholder="Пароль"
+                value={password}
+                onChangeText={setPassword}
+              />
             </View>
           </KeyboardAvoidingView>
-          <ConfirmButton title="Зареєструватися" />
+          <ConfirmButton title="Зареєструватися" onPress={handleSubmit} />
           <Redirection firstPart="Вже є акаунт?" secondPart="Увійти" />
         </View>
       </TouchableWithoutFeedback>

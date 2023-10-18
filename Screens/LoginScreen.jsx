@@ -1,3 +1,4 @@
+import { useState } from "react";
 import {
   KeyboardAvoidingView,
   StyleSheet,
@@ -15,7 +16,17 @@ import useKeyboardOpen from "../hooks/useKeyboardOpen";
 import { handleCloseKeyboard } from "../services/handleCloseKeyboard";
 
 const LoginScreen = () => {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
   const [isKeyboardOpen, setIsKeyboardOpen] = useKeyboardOpen();
+
+  const handleSubmit = () => {
+    const data = { email, password };
+    console.log(data);
+    setEmail("");
+    setPassword("");
+  };
 
   return (
     <Background>
@@ -31,11 +42,19 @@ const LoginScreen = () => {
                 marginBottom: isKeyboardOpen ? 100 : 43,
               }}
             >
-              <Input placeholder="Адреса електронної пошти" />
-              <Password placeholder="Пароль" />
+              <Input
+                placeholder="Адреса електронної пошти"
+                value={email}
+                onChangeText={setEmail}
+              />
+              <Password
+                placeholder="Пароль"
+                value={password}
+                onChangeText={setPassword}
+              />
             </View>
           </KeyboardAvoidingView>
-          <ConfirmButton title="Увійти" />
+          <ConfirmButton title="Увійти" onPress={handleSubmit} />
           <Redirection
             firstPart="Немає акаунту?"
             secondPart="Зареєструватися"

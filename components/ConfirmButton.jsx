@@ -1,8 +1,12 @@
 import { StyleSheet, Text, TouchableOpacity } from "react-native";
 
-export const ConfirmButton = ({ title }) => {
+export const ConfirmButton = ({ title, onPress }) => {
   return (
-    <TouchableOpacity style={styles.button} activeOpacity={0.7}>
+    <TouchableOpacity
+      style={styles.button}
+      activeOpacity={0.7}
+      onPress={onPress}
+    >
       <Text style={styles.buttonTitle}>{title}</Text>
     </TouchableOpacity>
   );
