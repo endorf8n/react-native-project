@@ -1,6 +1,7 @@
 import { View, TouchableOpacity, Text } from "react-native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { Feather, Fontisto } from "@expo/vector-icons";
+import { useNavigation } from "@react-navigation/native";
 import { PostsScreen } from "./posts/PostsScreen";
 import { CreatePostScreen } from "./posts/CreatePostScreen";
 import { ProfileScreen } from "./posts/ProfileScreen";
@@ -8,12 +9,14 @@ import { ProfileScreen } from "./posts/ProfileScreen";
 const Tab = createBottomTabNavigator();
 
 export const Home = () => {
+  const navigation = useNavigation();
+
   return (
     <Tab.Navigator
       initialRouteName="Posts"
       screenOptions={{
         tabBarShowLabel: false,
-        tabBarStyle: { height: 70 },
+        tabBarStyle: { position: "absolute", height: 70 },
         headerTitleAlign: "center",
         headerTitleStyle: {
           fontFamily: "Roboto-Medium",
@@ -29,11 +32,13 @@ export const Home = () => {
         component={PostsScreen}
         options={{
           title: "Публікації",
-          tabBarIcon: ({ focused, size, color }) => (
-            <Feather name="grid" size={24} color="#212121cc" />
-          ),
+          tabBarIcon: () => <Feather name="grid" size={24} color="#212121cc" />,
           headerRight: () => (
-            <TouchableOpacity style={{ marginRight: 16 }} activeOpacity={0.5}>
+            <TouchableOpacity
+              style={{ marginRight: 16 }}
+              activeOpacity={0.5}
+              onPress={() => navigation.navigate("Login")}
+            >
               <Feather name="log-out" size={24} color="#bdbdbd" />
             </TouchableOpacity>
           ),
@@ -44,7 +49,7 @@ export const Home = () => {
         component={CreatePostScreen}
         options={{
           title: "Створити публікацію",
-          tabBarIcon: ({ focused, size, color }) => (
+          tabBarIcon: () => (
             <Fontisto name="plus-a" size={18} color="#ffffff" />
           ),
           tabBarItemStyle: {
@@ -61,9 +66,7 @@ export const Home = () => {
         component={ProfileScreen}
         options={{
           headerShown: false,
-          tabBarIcon: ({ focused, size, color }) => (
-            <Feather name="user" size={24} color="#212121cc" />
-          ),
+          tabBarIcon: () => <Feather name="user" size={24} color="#212121cc" />,
         }}
       />
     </Tab.Navigator>

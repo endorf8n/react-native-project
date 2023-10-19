@@ -7,6 +7,7 @@ import {
   Platform,
   TouchableWithoutFeedback,
 } from "react-native";
+import { useNavigation } from "@react-navigation/native";
 import { PlusIcon } from "../../components/icons/PlusIcon.jsx";
 import { Input } from "../../components/Input.jsx";
 import { Password } from "../../components/Password.jsx";
@@ -21,6 +22,8 @@ const RegistrationScreen = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
+  const navigation = useNavigation();
+
   const [isKeyboardOpen, setIsKeyboardOpen] = useKeyboardOpen();
 
   const handleSubmit = () => {
@@ -30,6 +33,7 @@ const RegistrationScreen = () => {
     setLogin("");
     setEmail("");
     setPassword("");
+    navigation.navigate("Home");
   };
 
   return (

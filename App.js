@@ -14,5 +14,5 @@ export default function App() {
     return null;
   }
 
-  return <NavigationContainer>{selectRoute(true)}</NavigationContainer>;
+  return <NavigationContainer>{selectRoute(false)}</NavigationContainer>;
 }
