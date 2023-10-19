@@ -1,9 +1,10 @@
 import { View, Text } from "react-native";
+import { Background } from "../../components/Background";
 
 export const ProfileScreen = () => {
   return (
-    <View>
+    <Background>
       <Text>ProfileScreen</Text>
-    </View>
+    </Background>
   );
 };

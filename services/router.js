@@ -23,17 +23,13 @@ export const selectRoute = (isAuth) => {
             component={RegistrationScreen}
             options={{ headerShown: false }}
           />
-          <MainStack.Screen
-            name="Home"
-            component={Home}
-            options={{ headerShown: false }}
-          />
         </>
       ) : (
-        <>
-          <MainStack.Screen name="Comments" component={CommentsScreen} />
-          <MainStack.Screen name="Map" component={MapScreen} />
-        </>
+        <MainStack.Screen
+          name="Home"
+          component={Home}
+          options={{ headerShown: false }}
+        />
       )}
     </MainStack.Navigator>
   );

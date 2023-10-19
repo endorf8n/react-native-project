@@ -1,7 +1,7 @@
-import { View, TouchableOpacity, Text } from "react-native";
+import { TouchableOpacity } from "react-native-gesture-handler";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import { Feather, Fontisto } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
+import { Feather, Fontisto } from "@expo/vector-icons";
 import { PostsScreen } from "./posts/PostsScreen";
 import { CreatePostScreen } from "./posts/CreatePostScreen";
 import { ProfileScreen } from "./posts/ProfileScreen";
@@ -31,23 +31,15 @@ export const Home = () => {
         name="Posts"
         component={PostsScreen}
         options={{
-          title: "Публікації",
+          headerShown: false,
           tabBarIcon: () => <Feather name="grid" size={24} color="#212121cc" />,
-          headerRight: () => (
-            <TouchableOpacity
-              style={{ marginRight: 16 }}
-              activeOpacity={0.5}
-              onPress={() => navigation.navigate("Login")}
-            >
-              <Feather name="log-out" size={24} color="#bdbdbd" />
-            </TouchableOpacity>
-          ),
         }}
       />
       <Tab.Screen
         name="CreatePost"
         component={CreatePostScreen}
         options={{
+          tabBarStyle: { display: "none" },
           title: "Створити публікацію",
           tabBarIcon: () => (
             <Fontisto name="plus-a" size={18} color="#ffffff" />
@@ -59,6 +51,15 @@ export const Home = () => {
             borderRadius: 20,
             backgroundColor: "#ff6c00",
           },
+          headerLeft: () => (
+            <TouchableOpacity
+              style={{ marginLeft: 16 }}
+              activeOpacity={0.5}
+              onPress={() => navigation.goBack()}
+            >
+              <Feather name="arrow-left" size={24} color="##212121CC" />
+            </TouchableOpacity>
+          ),
         }}
       />
       <Tab.Screen
