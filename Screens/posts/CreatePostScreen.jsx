@@ -6,17 +6,21 @@ import {
   TouchableOpacity,
   Image,
   TextInput,
+  TouchableWithoutFeedback,
 } from "react-native";
 import { Camera, CameraType } from "expo-camera";
 import * as MediaLibrary from "expo-media-library";
+import * as Location from "expo-location";
 import { useNavigation } from "@react-navigation/native";
 import { Feather, MaterialIcons } from "@expo/vector-icons";
+import { handleCloseKeyboard } from "../../services/handleCloseKeyboard";
 
 export const CreatePostScreen = () => {
   const [camera, setCamera] = useState(null);
   const [photoUri, setPhotoUri] = useState(null);
   const [title, setTitle] = useState("");
   const [location, setLocation] = useState("");
+  const [locationCoords, setLocationCoords] = useState(null);
   const [type, setType] = useState(CameraType.back);
   const [hasPermission, setHasPermission] = useState(null);
 
@@ -26,9 +30,30 @@ export const CreatePostScreen = () => {
     (async () => {
       const { status } = await Camera.requestCameraPermissionsAsync();
       await MediaLibrary.requestPermissionsAsync();
+      const location = await Location.requestForegroundPermissionsAsync();
       setHasPermission(status === "granted");
     })();
   }, []);
+
+  useEffect(() => {
+    if (photoUri) {
+      (async () => {
+        const location = await Location.getCurrentPositionAsync({});
+        const coords = {
+          latitude: location.coords.latitude,
+          longitude: location.coords.longitude,
+        };
+        setLocationCoords(coords);
+
+        const [address] = await Location.reverseGeocodeAsync(coords);
+
+        if (!address) return;
+
+        const fullLocation = `${address.city}, ${address.region}, ${address.country}`;
+        setLocation(fullLocation);
+      })();
+    }
+  }, [photoUri]);
 
   const isNotDisabled = photoUri && title && location;
 
@@ -40,13 +65,26 @@ export const CreatePostScreen = () => {
 
     const photo = await camera.takePictureAsync();
     setPhotoUri(photo.uri);
-    console.log(photo.uri);
   };
 
-  const handleDelete = () => {
+  const handleReset = () => {
     setPhotoUri(null);
     setTitle("");
     setLocation("");
+  };
+
+  const handlePost = () => {
+    const data = {
+      photoUri,
+      title,
+      location,
+      locationCoords,
+    };
+    navigation.navigate("PostsDefault", data);
+  };
+
+  const handleDelete = () => {
+    handleReset();
     navigation.navigate("PostsDefault");
   };
 
@@ -65,88 +103,91 @@ export const CreatePostScreen = () => {
   }
 
   return (
-    <View style={styles.container}>
-      <View style={styles.cameraContainer}>
-        {photoUri ? (
-          <Image style={styles.image} source={{ uri: photo.Uri }} />
-        ) : (
-          <Camera style={styles.camera} ref={setCamera}></Camera>
-        )}
-        <TouchableOpacity
-          style={{
-            ...styles.cameraIconContainer,
-            backgroundColor: photoUri ? "#FFFFFF4D" : "#ffffff",
-          }}
-          activeOpacity={0.5}
-          onPress={takePicture}
-        >
+    <TouchableWithoutFeedback onPress={handleCloseKeyboard}>
+      <View style={styles.container}>
+        <View style={styles.cameraContainer}>
           {photoUri ? (
-            <MaterialIcons name="photo-camera" size={24} color="#ffffff" />
+            <Image style={styles.image} source={{ uri: photoUri }} />
           ) : (
-            <MaterialIcons name="camera-alt" size={24} color="#bdbdbd" />
+            <Camera style={styles.camera} ref={setCamera}></Camera>
           )}
-        </TouchableOpacity>
-      </View>
-      <TouchableOpacity style={styles.downloadBtn} activeOpacity={0.5}>
-        <Text style={styles.downloadText}>
-          {photoUri ? "Редагувати фото" : "Завантажте фото"}
-        </Text>
-      </TouchableOpacity>
-      <View style={styles.inputsWrapper}>
-        <View style={styles.inputContainer}>
-          <TextInput
-            style={styles.input}
-            placeholder="Назва..."
-            placeholderTextColor="#bdbdbd"
-            value={title}
-            onChangeText={setTitle}
-          />
-        </View>
-        <View
-          style={{
-            ...styles.inputContainer,
-            flexDirection: "row",
-            gap: 4,
-            alignItems: "center",
-          }}
-        >
-          <Feather name="map-pin" size={24} color="#bdbdbd" />
-          <TextInput
-            style={styles.input}
-            placeholder="Місцевість..."
-            placeholderTextColor="#bdbdbd"
-            value={location}
-            onChangeText={setLocation}
-          />
-        </View>
-      </View>
-      <View style={styles.bottomWrapper}>
-        <TouchableOpacity
-          style={{
-            ...styles.postBtn,
-            backgroundColor: isNotDisabled ? "#ff6c00" : "#f6f6f6",
-          }}
-          activeOpacity={0.5}
-          disabled={isNotDisabled ? false : true}
-        >
-          <Text
+          <TouchableOpacity
             style={{
-              ...styles.postText,
-              color: isNotDisabled ? "#ffffff" : "#bdbdbd",
+              ...styles.cameraIconContainer,
+              backgroundColor: photoUri ? "#FFFFFF4D" : "#ffffff",
             }}
+            activeOpacity={0.5}
+            onPress={takePicture}
           >
-            Опублікувати
+            {photoUri ? (
+              <MaterialIcons name="photo-camera" size={24} color="#ffffff" />
+            ) : (
+              <MaterialIcons name="camera-alt" size={24} color="#bdbdbd" />
+            )}
+          </TouchableOpacity>
+        </View>
+        <TouchableOpacity style={styles.downloadBtn} activeOpacity={0.5}>
+          <Text style={styles.downloadText}>
+            {photoUri ? "Редагувати фото" : "Завантажте фото"}
           </Text>
         </TouchableOpacity>
-        <TouchableOpacity
-          style={styles.trashBtn}
-          activeOpacity={0.5}
-          onPress={handleDelete}
-        >
-          <Feather name="trash-2" size={24} color="#bdbdbd" />
-        </TouchableOpacity>
+        <View style={styles.inputsWrapper}>
+          <View style={styles.inputContainer}>
+            <TextInput
+              style={styles.input}
+              placeholder="Назва..."
+              placeholderTextColor="#bdbdbd"
+              value={title}
+              onChangeText={setTitle}
+            />
+          </View>
+          <View
+            style={{
+              ...styles.inputContainer,
+              flexDirection: "row",
+              gap: 4,
+              alignItems: "center",
+            }}
+          >
+            <Feather name="map-pin" size={24} color="#bdbdbd" />
+            <TextInput
+              style={styles.input}
+              placeholder="Місцевість..."
+              placeholderTextColor="#bdbdbd"
+              value={location}
+              onChangeText={setLocation}
+            />
+          </View>
+        </View>
+        <View style={styles.bottomWrapper}>
+          <TouchableOpacity
+            style={{
+              ...styles.postBtn,
+              backgroundColor: isNotDisabled ? "#ff6c00" : "#f6f6f6",
+            }}
+            activeOpacity={0.5}
+            disabled={isNotDisabled ? false : true}
+            onPress={handlePost}
+          >
+            <Text
+              style={{
+                ...styles.postText,
+                color: isNotDisabled ? "#ffffff" : "#bdbdbd",
+              }}
+            >
+              Опублікувати
+            </Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.trashBtn}
+            activeOpacity={0.5}
+            onPress={handleDelete}
+          >
+            <Feather name="trash-2" size={24} color="#bdbdbd" />
+          </TouchableOpacity>
+        </View>
       </View>
-    </View>
+    </TouchableWithoutFeedback>
   );
 };
 
@@ -167,7 +208,6 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     overflow: "hidden",
     marginBottom: 8,
-    // backgroundColor: "#f6f6f6",
   },
 
   camera: {
@@ -217,7 +257,7 @@ const styles = StyleSheet.create({
   input: {
     fontFamily: "Roboto-Medium",
     fontSize: 16,
-    color: "#bdbdbd",
+    color: "#212121",
   },
 
   bottomWrapper: {

@@ -13,6 +13,7 @@ export const Home = () => {
 
   return (
     <Tab.Navigator
+      id="home"
       initialRouteName="Posts"
       screenOptions={{
         tabBarShowLabel: false,
@@ -31,6 +32,9 @@ export const Home = () => {
         name="Posts"
         component={PostsScreen}
         options={{
+          tabBarStyle: {
+            display: "flex",
+          },
           headerShown: false,
           tabBarIcon: () => <Feather name="grid" size={24} color="#212121cc" />,
         }}
@@ -57,7 +61,7 @@ export const Home = () => {
               activeOpacity={0.5}
               onPress={() => navigation.goBack()}
             >
-              <Feather name="arrow-left" size={24} color="##212121CC" />
+              <Feather name="arrow-left" size={24} color="#212121CC" />
             </TouchableOpacity>
           ),
         }}

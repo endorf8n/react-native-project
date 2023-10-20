@@ -17,9 +17,9 @@ export const PostsScreen = () => {
       screenOptions={{ headerTitleAlign: "center" }}
     >
       <PostsScreen.Screen
-        name={PostsDefault}
+        name="PostsDefault"
         component={DefaultScreen}
-        opteions={{
+        options={{
           title: "Публікації",
           headerRight: () => (
             <TouchableOpacity
@@ -32,8 +32,20 @@ export const PostsScreen = () => {
           ),
         }}
       />
-      <PostsScreen.Screen name="Comments" component={CommentsScreen} />
-      <PostsScreen.Screen name="Map" component={MapScreen} />
+      <PostsScreen.Screen
+        name="Comments"
+        component={CommentsScreen}
+        options={{
+          title: "Коментарі",
+        }}
+      />
+      <PostsScreen.Screen
+        name="Map"
+        component={MapScreen}
+        options={{
+          title: "Мапа",
+        }}
+      />
     </PostsScreen.Navigator>
   );
 };
