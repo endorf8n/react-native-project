@@ -189,7 +189,7 @@ const styles = StyleSheet.create({
   addBtn: {
     position: "absolute",
     bottom: 14,
-    right: -13,
+    right: -12,
   },
 
   icon: {
