@@ -7,6 +7,7 @@ import {
   Platform,
   TouchableWithoutFeedback,
 } from "react-native";
+import { useDispatch } from "react-redux";
 import { useNavigation } from "@react-navigation/native";
 import { Input } from "../../components/Input";
 import { Password } from "../../components/Password";
@@ -15,21 +16,26 @@ import { Redirection } from "../../components/Redirection";
 import { Background } from "../../components/Background";
 import useKeyboardOpen from "../../hooks/useKeyboardOpen";
 import { handleCloseKeyboard } from "../../services/handleCloseKeyboard";
+import { loginThunk } from "../../redux/auth/authOperations";
 
 const LoginScreen = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
   const navigation = useNavigation();
+  const dispatch = useDispatch();
 
   const [isKeyboardOpen, setIsKeyboardOpen] = useKeyboardOpen();
 
   const handleSubmit = () => {
     const data = { email, password };
-    console.log(data);
-    setEmail("");
-    setPassword("");
-    navigation.navigate("Home");
+    dispatch(loginThunk(data))
+      .unwrap()
+      .then(() => {
+        setEmail("");
+        setPassword("");
+        navigation.navigate("Home");
+      });
   };
 
   return (

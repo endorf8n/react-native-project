@@ -3,8 +3,6 @@ import { createStackNavigator } from "@react-navigation/stack";
 import LoginScreen from "../Screens/auth/LoginScreen.jsx";
 import RegistrationScreen from "../Screens/auth/RegistrationScreen.jsx";
 import { Home } from "../Screens/Home.jsx";
-import { CommentsScreen } from "../Screens/posts/CommentsScreen.jsx";
-import { MapScreen } from "../Screens/posts/MapScreen.jsx";
 
 const MainStack = createStackNavigator();
 

@@ -1,15 +1,21 @@
 import { TouchableOpacity } from "react-native";
+import { useDispatch } from "react-redux";
 import { createStackNavigator } from "@react-navigation/stack";
 import { useNavigation } from "@react-navigation/native";
 import { Feather } from "@expo/vector-icons";
-
 import { CommentsScreen } from "./CommentsScreen";
 import { MapScreen } from "./MapScreen";
 import { DefaultScreen } from "./DefaultScreen";
+import { logOutThunk } from "../../redux/auth/authOperations";
 
 export const PostsScreen = () => {
+  const dispatch = useDispatch();
   const navigation = useNavigation();
   const PostsScreen = createStackNavigator();
+
+  const handleLogOut = () => {
+    dispatch(logOutThunk());
+  };
 
   return (
     <PostsScreen.Navigator
@@ -25,7 +31,7 @@ export const PostsScreen = () => {
             <TouchableOpacity
               style={{ marginRight: 16 }}
               activeOpacity={0.5}
-              onPress={() => navigation.navigate("Login")}
+              onPress={handleLogOut}
             >
               <Feather name="log-out" size={24} color="#BDBDBD" />
             </TouchableOpacity>
