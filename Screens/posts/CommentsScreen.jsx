@@ -55,16 +55,18 @@ export const CommentsScreen = () => {
   }, [isFocused]);
 
   const handleSendComment = async () => {
-    const data = {
-      comment,
-      userAvatar: user.avatar,
-      date: Date.now(),
-      userId: user.id,
-    };
+    if (comment) {
+      const data = {
+        comment,
+        userAvatar: user.avatar,
+        date: Date.now(),
+        userId: user.id,
+      };
 
-    const docRef = doc(db, "posts", route.params.id);
-    await addDoc(collection(docRef, "comments"), data);
-    setComment("");
+      const docRef = doc(db, "posts", route.params.id);
+      await addDoc(collection(docRef, "comments"), data);
+      setComment("");
+    }
   };
 
   return (
@@ -80,7 +82,7 @@ export const CommentsScreen = () => {
           behavior={Platform.OS === "ios" ? "padding" : "height"}
           style={{
             marginTop: "auto",
-            marginBottom: isKeyboardOpen ? 30 : 0,
+            paddingBottom: isKeyboardOpen ? 30 : 0,
           }}
         >
           <View style={styles.inputContainer}>

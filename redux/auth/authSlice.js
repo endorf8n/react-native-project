@@ -19,6 +19,9 @@ const authSlice = createSlice({
       state.user = payload.user;
       state.stateChanged = payload.stateChanged;
     },
+    updateAvatar: (state, { payload }) => {
+      state.user.avatar = payload.photo;
+    },
   },
 
   extraReducers: (builder) => {
@@ -37,5 +40,5 @@ const authSlice = createSlice({
   },
 });
 
-export const { refreshUser } = authSlice.actions;
+export const { refreshUser, updateAvatar } = authSlice.actions;
 export const authReducer = authSlice.reducer;

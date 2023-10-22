@@ -45,7 +45,7 @@ const RegistrationScreen = () => {
   }, []);
 
   const handleAvatarLoad = async () => {
-    let result = await ImagePicker.launchImageLibraryAsync({
+    const result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.All,
       allowsEditing: true,
       aspect: [4, 4],
@@ -84,12 +84,21 @@ const RegistrationScreen = () => {
               activeOpacity={0.5}
               onPress={handleAvatarLoad}
             >
-              <SimpleLineIcons
-                name="plus"
-                size={24}
-                color="#ff6c00"
-                style={styles.icon}
-              />
+              {avatar ? (
+                <SimpleLineIcons
+                  name="close"
+                  size={25}
+                  color="#e8e8e8"
+                  style={styles.icon}
+                />
+              ) : (
+                <SimpleLineIcons
+                  name="plus"
+                  size={24}
+                  color="#ff6c00"
+                  style={styles.icon}
+                />
+              )}
             </TouchableOpacity>
           </View>
           <Text style={styles.title}>Реєстрація</Text>
@@ -163,6 +172,7 @@ const styles = StyleSheet.create({
   image: {
     width: 120,
     height: 120,
+    borderRadius: 16,
   },
 
   addBtn: {
