@@ -16,7 +16,7 @@ import { useNavigation } from "@react-navigation/native";
 import { addDoc, collection } from "firebase/firestore";
 import { Feather, MaterialIcons } from "@expo/vector-icons";
 import { handleCloseKeyboard } from "../../services/handleCloseKeyboard";
-import { selectUser } from "../../redux/auth/authSlice";
+import { selectUser } from "../../redux/auth/authSelectors";
 import { db } from "../../firebase/config";
 import { uploadImageToServer } from "../../services/uploadImageToServer";
 
@@ -94,13 +94,13 @@ export const CreatePostScreen = () => {
       date: Date.now(),
     };
     await addDoc(collection(db, "posts"), data);
-    navigation.navigate("PostsDefault");
+    navigation.navigate("PostsDefault", { screen: "DefaultScreen" });
     handleReset();
   };
 
   const handleDelete = () => {
     handleReset();
-    navigation.navigate("PostsDefault");
+    navigation.navigate("PostsDefault", { screen: "DefaultScreen" });
   };
 
   const handleToggleCamera = () => {

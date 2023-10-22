@@ -16,7 +16,8 @@ export const DefaultScreen = () => {
       onSnapshot(collection(db, "posts"), (doc) => {
         const allPosts = doc.docs
           .map((post) => ({ ...post.data(), id: post.id }))
-          .sort((a, v) => blur.date - a.date);
+          .sort((a, b) => b.date - a.date);
+        console.log(allPosts);
         setPosts(allPosts);
       });
     })();
@@ -33,7 +34,7 @@ export const DefaultScreen = () => {
       </View>
       <FlatList
         data={posts}
-        keyExtractor={({ item }) => item.id}
+        keyExtractor={(item) => item.id}
         renderItem={({ item }) => <PostItem post={item} />}
       />
     </View>
@@ -63,7 +64,7 @@ const styles = StyleSheet.create({
   },
 
   userName: {
-    fontFamily: "Robot-Bold",
+    fontFamily: "Roboto-Bold",
     fontSize: 13,
     color: "#212121",
   },

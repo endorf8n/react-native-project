@@ -2,7 +2,7 @@ import { nanoid } from "@reduxjs/toolkit";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { storage } from "../firebase/config";
 
-const uploadImageToServer = async ({ imageUri, folder }) => {
+export const uploadImageToServer = async ({ imageUri, folder }) => {
   const uniqueAvatarId = nanoid();
 
   if (imageUri) {

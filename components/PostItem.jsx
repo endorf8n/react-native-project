@@ -19,8 +19,7 @@ import { selectUser } from "../redux/auth/authSelectors";
 import { db } from "../firebase/config";
 
 export const PostItem = ({ post }) => {
-  const { id, imageUrl, title, locationCoords, userId, date } = post;
-
+  const { id, imageUrl, location, title, locationCoords, userId, date } = post;
   const navigation = useNavigation();
 
   const user = useSelector(selectUser);

@@ -6,7 +6,6 @@ import {
   signOut,
 } from "firebase/auth";
 import { auth } from "../../firebase/config";
-import parseErrorStack from "react-native/Libraries/Core/Devtools/parseErrorStack";
 
 export const registerThunk = createAsyncThunk(
   "auth/register",
