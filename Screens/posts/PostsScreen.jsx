@@ -1,4 +1,4 @@
-import { TouchableOpacity } from "react-native";
+import { Alert, TouchableOpacity } from "react-native";
 import { useDispatch } from "react-redux";
 import { createStackNavigator } from "@react-navigation/stack";
 import { useNavigation } from "@react-navigation/native";
@@ -14,7 +14,9 @@ export const PostsScreen = () => {
   const PostsScreen = createStackNavigator();
 
   const handleLogOut = () => {
-    dispatch(logOutThunk());
+    dispatch(logOutThunk())
+      .unwrap()
+      .catch((error) => Alert.alert("Помилка виходу з акаунту", error));
   };
 
   return (

@@ -6,6 +6,7 @@ import {
   Image,
   FlatList,
   TouchableOpacity,
+  Alert,
 } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -54,7 +55,9 @@ export const ProfileScreen = () => {
   }, []);
 
   const handleLogOut = () => {
-    dispatch(logOutThunk);
+    dispatch(logOutThunk())
+      .unwrap()
+      .catch((error) => Alert.alert("Помилка виходу з акаунту", error));
   };
 
   const handleUpdateAvatar = async () => {

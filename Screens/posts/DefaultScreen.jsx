@@ -17,7 +17,7 @@ export const DefaultScreen = () => {
         const allPosts = doc.docs
           .map((post) => ({ ...post.data(), id: post.id }))
           .sort((a, b) => b.date - a.date);
-        console.log(allPosts);
+
         setPosts(allPosts);
       });
     })();

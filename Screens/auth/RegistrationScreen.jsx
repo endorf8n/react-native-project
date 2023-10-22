@@ -8,6 +8,7 @@ import {
   TouchableWithoutFeedback,
   TouchableOpacity,
   Image,
+  Alert,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { useDispatch } from "react-redux";
@@ -71,7 +72,8 @@ const RegistrationScreen = () => {
         setEmail("");
         setPassword("");
         navigation.navigate("Home");
-      });
+      })
+      .catch((error) => Alert.alert("Помилка реєстрації", error));
   };
 
   return (
