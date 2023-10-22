@@ -88,9 +88,9 @@ export const CommentsScreen = () => {
           <View style={styles.inputContainer}>
             <TextInput
               style={styles.input}
-              placeholder="Коментувати"
+              placeholder="Коментувати..."
               placeholderTextColor="#bdbdbd"
-              value="comment"
+              value={comment}
               onChangeText={setComment}
             />
             <TouchableOpacity
