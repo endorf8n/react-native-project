@@ -22,6 +22,7 @@ import useKeyboardOpen from "../../hooks/useKeyboardOpen.js";
 import { handleCloseKeyboard } from "../../services/handleCloseKeyboard.js";
 import { registerThunk } from "../../redux/auth/authOperations.js";
 import { uploadImageToServer } from "../../services/uploadImageToServer.js";
+import { getDefaultAvatarUrl } from "../../services/getDefaultAvatarUrl.js";
 
 const RegistrationScreen = () => {
   const [name, setName] = useState("");
@@ -60,7 +61,7 @@ const RegistrationScreen = () => {
   const handleSubmit = async () => {
     const photo = avatar
       ? await uploadImageToServer({ imageUri: avatar, folder: "avatars" })
-      : "";
+      : await getDefaultAvatarUrl();
 
     const data = { name, email, password, photo };
     dispatch(registerThunk(data))
