@@ -11,9 +11,7 @@ import {
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { useDispatch } from "react-redux";
-import { nanoid } from "@reduxjs/toolkit";
 import * as ImagePicker from "expo-image-picker";
-import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { SimpleLineIcons } from "@expo/vector-icons";
 import { Input } from "../../components/Input.jsx";
 import { Password } from "../../components/Password.jsx";
@@ -23,7 +21,7 @@ import { Background } from "../../components/Background.jsx";
 import useKeyboardOpen from "../../hooks/useKeyboardOpen.js";
 import { handleCloseKeyboard } from "../../services/handleCloseKeyboard.js";
 import { registerThunk } from "../../redux/auth/authOperations.js";
-import { storage } from "../../firebase/config.js";
+import { uploadImageToServer } from "../../services/uploadImageToServer.js";
 
 const RegistrationScreen = () => {
   const [name, setName] = useState("");
@@ -59,29 +57,10 @@ const RegistrationScreen = () => {
     }
   };
 
-  const uploadImageToServer = async (imageUri) => {
-    const uniqueAvatarId = nanoid();
-
-    if (imageUri) {
-      try {
-        const response = await fetch(imageUri);
-        const file = await response.blob();
-        const imageRef = await ref(storage, `avatars/${uniqueAvatarId}`);
-
-        await uploadBytes(imageRef, file);
-
-        const downloadURL = await getDownloadURL(imageRef);
-        return downloadURL;
-      } catch (error) {
-        console.warn("uploadImageToServer: ", error);
-      }
-    }
-  };
-
   const handleSubmit = async () => {
     const photo = avatar
-      ? await uploadImageToServer(avatar)
-      : "https://shorturl.at/agwJW";
+      ? await uploadImageToServer({ imageUri: avatar, folder: "avatars" })
+      : "";
 
     const data = { name, email, password, photo };
     dispatch(registerThunk(data))

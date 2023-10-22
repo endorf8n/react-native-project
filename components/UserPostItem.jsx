@@ -1,35 +1,20 @@
-import { useState } from "react";
-import { UseSelector, useSelector } from "react-redux";
-import { Image, Text, StyleSheet, TouchableOpacity, View } from "react-native";
+import { View, Text, StyleSheet, Image, TouchableOpacity } from "react-native";
 import { useNavigation } from "@react-navigation/native";
-import { Feather, FontAwesome5, FontAwesome } from "@expo/vector-icons";
-import {
-  addDoc,
-  collection,
-  deleteDoc,
-  doc,
-  getDoc,
-  getDocs,
-  query,
-  where,
-} from "firebase/firestore";
+import { FontAwesome5, FontAwesome, Feather } from "@expo/vector-icons";
 import { useGetComments } from "../hooks/useGetComments";
 import { useGetLikes } from "../hooks/useGetLikes";
-import { selectUser } from "../redux/auth/authSelectors";
-import { db } from "../firebase/config";
 
-export const PostItem = ({ post }) => {
-  const { id, imageUrl, title, locationCoords, userId, date } = post;
+export const UserPostItem = ({ post }) => {
+  const { id, imageUrl, location, title, locationCoords, userId, date } = post;
 
-  const navigation = useNavigation();
-
-  const user = useSelector(selectUser);
   const [allComments] = useGetComments(id);
   const [allLikes] = useGetLikes(id);
 
+  const navigation = useNavigation();
+
   const commentsNumber = allComments.length;
   const likesNumber = allLikes.length;
-  const userLike = allLikes.find((like) => like.userId === user.id);
+  const country = location.split(", ")[2];
 
   const handleCommentsClick = () => {
     navigation.navigate("Comments", { id, imageUrl });
@@ -39,25 +24,11 @@ export const PostItem = ({ post }) => {
     navigation.navigate("Map", { locationCoords });
   };
 
-  const toggleLike = async () => {
-    if (userLike) {
-      const docRef = doc(db, "posts", id, "likes", userLike.id);
-      await deleteDoc(docRef);
-    } else {
-      const docRef = doc(db, "posts", id);
-      await addDoc(collection(docRef, "likes"), {
-        userId: user.id,
-        userName: user.name,
-        userEmail: user.email,
-      });
-    }
-  };
-
   return (
     <View style={styles.container}>
       <Image style={styles.image} source={{ uri: imageUrl }} />
       <Text style={styles.title}>{title}</Text>
-      <View style={styles.descrContainer}>
+      <View style={styles.descriptionContainer}>
         <View style={styles.btnContainer}>
           <TouchableOpacity
             style={styles.commentsBtn}
@@ -92,20 +63,16 @@ export const PostItem = ({ post }) => {
               {commentsNumber}
             </Text>
           </TouchableOpacity>
-          <TouchableOpacity
-            activeOpacity={0.5}
-            onPress={toggleLike}
-            style={styles.commentsBtn}
-          >
+          <TouchableOpacity style={styles.commentsBtn} activeOpacity={0.5}>
             <Feather
               name="thumbs-up"
               size={24}
-              color={userLike ? "#ff6c00" : "#bdbdbd"}
+              color={likesNumber ? "#ff6c00" : "#bdbdbd"}
             />
             <Text
               style={{
                 ...styles.commentsNumber,
-                color: likesNumber ? "#ff6c00" : "#bdbdbd",
+                color: likesNumber ? "#212121" : "#bdbdbd",
               }}
             >
               {likesNumber}
@@ -118,7 +85,8 @@ export const PostItem = ({ post }) => {
           onPress={handleLocation}
         >
           <Feather name="map-pin" size={24} color="#bdbdbd" />
-          <Text style={styles.locationTitle}>{location}</Text>
+
+          <Text style={styles.locationTitle}>{country}</Text>
         </TouchableOpacity>
       </View>
     </View>
@@ -142,7 +110,7 @@ const styles = StyleSheet.create({
     color: "#212121",
   },
 
-  descrContainer: {
+  descriptionContainer: {
     flexDirection: "row",
     justifyContent: "space-between",
     gap: 8,
@@ -151,13 +119,13 @@ const styles = StyleSheet.create({
   btnContainer: {
     alignItems: "center",
     flexDirection: "row",
-    gap: 16,
+    gap: 24,
   },
 
   commentsBtn: {
     flexDirection: "row",
-    alignItems: "center",
     gap: 6,
+    alignItems: "center",
   },
 
   commentsNumber: {
@@ -166,7 +134,6 @@ const styles = StyleSheet.create({
   },
 
   locationBtn: {
-    maxWidth: 230,
     flexDirection: "row",
     alignItems: "center",
     gap: 4,

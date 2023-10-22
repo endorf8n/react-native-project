@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useSelector } from "react-redux";
 import {
   View,
   Text,
@@ -12,8 +13,12 @@ import { Camera, CameraType } from "expo-camera";
 import * as MediaLibrary from "expo-media-library";
 import * as Location from "expo-location";
 import { useNavigation } from "@react-navigation/native";
+import { addDoc, collection } from "firebase/firestore";
 import { Feather, MaterialIcons } from "@expo/vector-icons";
 import { handleCloseKeyboard } from "../../services/handleCloseKeyboard";
+import { selectUser } from "../../redux/auth/authSlice";
+import { db } from "../../firebase/config";
+import { uploadImageToServer } from "../../services/uploadImageToServer";
 
 export const CreatePostScreen = () => {
   const [camera, setCamera] = useState(null);
@@ -24,6 +29,7 @@ export const CreatePostScreen = () => {
   const [type, setType] = useState(CameraType.back);
   const [hasPermission, setHasPermission] = useState(null);
 
+  const user = useSelector(selectUser);
   const navigation = useNavigation();
 
   useEffect(() => {
@@ -73,14 +79,23 @@ export const CreatePostScreen = () => {
     setLocation("");
   };
 
-  const handlePost = () => {
+  const handlePost = async () => {
+    const imageUrl = await uploadImageToServer({
+      imageUri: photoUri,
+      folder: "postImages",
+    });
+
     const data = {
-      photoUri,
+      imageUrl,
       title,
       location,
       locationCoords,
+      userId: user.id,
+      date: Date.now(),
     };
-    navigation.navigate("PostsDefault", data);
+    await addDoc(collection(db, "posts"), data);
+    navigation.navigate("PostsDefault");
+    handleReset();
   };
 
   const handleDelete = () => {

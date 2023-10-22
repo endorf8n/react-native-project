@@ -8,27 +8,37 @@ import {
   TextInput,
   TouchableWithoutFeedback,
   KeyboardAvoidingView,
+  FlatList,
 } from "react-native";
+import { useSelector } from "react-redux";
 import {
   useIsFocused,
   useNavigation,
   useRoute,
 } from "@react-navigation/native";
+import { addDoc, collection, doc, onSnapshot } from "firebase/firestore";
 import { AntDesign } from "@expo/vector-icons";
 import useKeyboardOpen from "../../hooks/useKeyboardOpen";
 import { handleCloseKeyboard } from "../../services/handleCloseKeyboard";
+import { db } from "../../firebase/config";
+import { selectUser } from "../../redux/auth/authSelectors";
+import { CommentItem } from "../../components/CommentItem";
+import { useGetComments } from "../../hooks/useGetComments";
 
 export const CommentsScreen = () => {
-  const [photoUri, setPhotoUri] = useState("");
+  const [photoUrl, setPhotoUrl] = useState("");
   const [comment, setComment] = useState("");
+
+  const user = useSelector(selectUser);
   const route = useRoute();
   const isFocused = useIsFocused();
   const navigation = useNavigation();
+  const [allComments] = useGetComments(route.params.id);
   const [isKeyboardOpen, setIsKeyboardOpen] = useKeyboardOpen();
 
   useEffect(() => {
     if (route.params) {
-      setPhotoUri(route.params.photoUri);
+      setPhotoUrl(route.params.imageUrl);
     }
   }, [route.params]);
 
@@ -44,10 +54,28 @@ export const CommentsScreen = () => {
     }
   }, [isFocused]);
 
+  const handleSendComment = async () => {
+    const data = {
+      comment,
+      userAvatar: user.avatar,
+      date: Date.now(),
+      userId: user.id,
+    };
+
+    const docRef = doc(db, "posts", route.params.id);
+    await addDoc(collection(docRef, "comments"), data);
+    setComment("");
+  };
+
   return (
     <TouchableWithoutFeedback onPress={handleCloseKeyboard}>
       <View style={styles.container}>
-        {photoUri && <Image style={styles.images} source={{ uri: photoUri }} />}
+        {photoUrl && <Image style={styles.image} source={{ uri: photoUrl }} />}
+        <FlatList
+          data={allComments}
+          keyExtractor={(item) => item.id}
+          renderItem={({ item }) => <CommentItem data={item} />}
+        />
         <KeyboardAvoidingView
           behavior={Platform.OS === "ios" ? "padding" : "height"}
           style={{
@@ -63,7 +91,10 @@ export const CommentsScreen = () => {
               value="comment"
               onChangeText={setComment}
             />
-            <TouchableOpacity style={styles.sendBtn}>
+            <TouchableOpacity
+              style={styles.sendBtn}
+              onPress={handleSendComment}
+            >
               <AntDesign name="arrowup" size={24} color="#ffffff" />
             </TouchableOpacity>
           </View>
@@ -85,6 +116,7 @@ const styles = StyleSheet.create({
   image: {
     height: 240,
     borderRadius: 8,
+    marginBottom: 32,
   },
 
   inputContainer: {
