@@ -136,7 +136,7 @@ const styles = StyleSheet.create({
     width: "85%",
     fontFamily: "Roboto-Medium",
     fontSize: 16,
-    color: "#bdbdbd",
+    color: "#212121",
     paddingLeft: 8,
   },
 
